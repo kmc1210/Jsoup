@@ -27,12 +27,16 @@ public class CoronaNewsController {
 	private  CovidNewsService covidNewsService; 
 	
 	@RequestMapping(value="/covidNews.do", method = RequestMethod.GET)
-	public ModelAndView newsList(@RequestParam(required=false, defaultValue = "1")int cPage) throws IOException {
+	public ModelAndView newsList(
+			@RequestParam(required=false, defaultValue = "1")int cPage,
+			@RequestParam(required=false, defaultValue = "t")String search_item,
+			@RequestParam(required=false, defaultValue = "")String search_content) throws IOException {
 		
+		search_content = search_content.trim(); //공백제거
 		ModelAndView mav = new ModelAndView();
 		int cntPerPage = 8;
-		Map<String, Object> commandMap = covidNewsService.selectNewsList(cPage, cntPerPage);
-		mav.addObject("paging", commandMap.get("paging"));
+		Map<String, Object> commandMap = covidNewsService.selectNewsList(cPage, cntPerPage, search_item, search_content);
+		mav.addObject("paging", commandMap.get("NewsPaging"));
 		mav.addObject("list", commandMap);
 		mav.setViewName("newsBoard/news");
 		
